@@ -4,6 +4,10 @@ A lightweight bulletin board: categories, forums, topics and posts, with
 sign-in through Telegram. One executable with SQLite built in; it runs on a
 small VPS in a few tens of megabytes of memory.
 
+The documentation is at <https://rustbb.github.io>: getting started,
+configuration, deployment, Docker, upgrading and more. This file is the
+short version.
+
 ## What is in this archive
 
 | File | What it is |
@@ -46,7 +50,8 @@ sudo cp deploy/rustbb.service /etc/systemd/system/
 sudo systemctl enable --now rustbb
 ```
 
-The database lives in `/var/lib/rustbb/`. Migrations run on every start.
+The database lives in `/var/lib/rustbb/`. Migrations run on every start;
+before applying any, RustBB backs the database up next to it.
 `env.example` ends with `RUSTBB_DEV_LOGIN`; release builds ignore it.
 
 ## Telegram
@@ -56,7 +61,18 @@ The database lives in `/var/lib/rustbb/`. Migrations run on every start.
 3. Set `RUSTBB_TELEGRAM_BOT_TOKEN`, `RUSTBB_TELEGRAM_BOT_USERNAME` and
    `RUSTBB_BASE_URL` (the public `https://` address).
 4. Put your own numeric Telegram id in `RUSTBB_ADMIN_TELEGRAM_ID`. That
-   account becomes administrator the first time it signs in.
+   account becomes administrator the first time it signs in, and it can
+   register without an invitation code, even in `INVITE` or `CLOSED` mode.
+   Without this setting, create the first code with `rustbb invite create`
+   and promote yourself with `rustbb user role <name> admin`.
+5. In `INVITE` mode, people without a code can ask for an invitation from
+   the registration form. The bot messages you about each request, and
+   messages them when you approve it (Admin, Requests, or
+   `rustbb request approve <id>`, which needs the server's settings for the
+   bot and the database). The approval applies by itself when they log in.
+   The bot can only write to accounts that allowed it at login, which the
+   login widget asks for; the Requests page says when it could not. The
+   server must be able to reach `api.telegram.org` over HTTPS.
 
 ## Docker
 
@@ -92,7 +108,11 @@ rustbb user role <name> admin   # user | moderator | admin
 rustbb user ban <name>
 rustbb user unban <name>
 rustbb invite create --uses 5 --days 7
+rustbb invite create --for alice    # for one Telegram account; no code to type
 rustbb invite list
+rustbb request list             # people who asked for an invitation
+rustbb request approve <id>     # invites them; the bot tells them
+rustbb request decline <id>
 rustbb backup /path/to/copy.db  # a consistent copy while the forum runs
 rustbb licenses
 rustbb --version
