@@ -1,0 +1,22 @@
+[Unit]
+Description=RustBB forum
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/rustbb serve
+EnvironmentFile=/etc/rustbb/env
+DynamicUser=yes
+StateDirectory=rustbb
+Environment=RUSTBB_DATABASE_PATH=/var/lib/rustbb/rustbb.db
+Environment=RUSTBB_BIND=127.0.0.1:8080
+Restart=on-failure
+KillSignal=SIGTERM
+TimeoutStopSec=20
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
