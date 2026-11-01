@@ -131,4 +131,12 @@ sudo systemd-run --pipe --wait --quiet -p DynamicUser=yes -p StateDirectory=rust
 ## macOS
 
 The binaries are not notarized. After unpacking, clear the quarantine flag
-before the first run: `xattr -d com.apple.quarantine rustbb`.
+before the first run: `xattr -d com.apple.quarantine rustbb`. Or install it
+with Homebrew, `brew install rustbb/tap/rustbb`, and run it with
+`brew services start rustbb`.
+
+## Security
+
+Report a vulnerability privately, not in an issue, as
+[SECURITY.md](https://github.com/rustbb/releases/blob/main/SECURITY.md)
+explains.
