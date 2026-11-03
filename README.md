@@ -14,7 +14,7 @@ short version.
 | --- | --- |
 | `rustbb` (`rustbb.exe` on Windows) | The forum: web server, database and command line in one |
 | `env.example` | Every setting, as environment variables |
-| `deploy/rustbb.service` | A systemd unit |
+| `deploy/rustbb.service` | A systemd unit (`deploy/rustbb`, an rc.d script, in the FreeBSD archives) |
 | `deploy/xenia.conf.js` | A config for the [Xenia](https://xenia-platform.github.io) web server in front of RustBB |
 | `deploy/Caddyfile`, `deploy/nginx.conf` | The same for Caddy or Nginx |
 | `LICENSE` | The RustBB License: the terms you use RustBB under |
@@ -53,6 +53,17 @@ sudo systemctl enable --now rustbb
 The database lives in `/var/lib/rustbb/`. Migrations run on every start;
 before applying any, RustBB backs the database up next to it.
 `env.example` ends with `RUSTBB_DEV_LOGIN`; release builds ignore it.
+
+## Install on FreeBSD
+
+Install the FreeBSD package instead, as root: `pkg install rustbb` from
+the [pkg repository](https://rustbb.github.io/pkg/), or
+`pkg add ./rustbb-VERSION-freebsd-amd64.pkg` (or `-arm64`) from the same
+release. It
+adds the user `rustbb`, the rc.d service and its settings in
+`/usr/local/etc/rustbb/env`. Then `sysrc rustbb_enable=YES` and
+`service rustbb start`. [Deployment](https://rustbb.github.io/deployment/#freebsd)
+has the details.
 
 ## Telegram
 
